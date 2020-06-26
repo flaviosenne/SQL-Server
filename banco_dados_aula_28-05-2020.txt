@@ -1,0 +1,308 @@
+﻿ create table Funcionario(
+ nome varchar (30), 
+ dt_nasc datetime,
+ nacionalidade varchar (15),
+ sexo varchar (10),
+ est_civil varchar (10),
+ rg varchar (13),
+ endereco varchar(50),
+ dt_admissao datetime
+)
+
+create table Fone(
+ matricula int,
+ numero_fone varchar(20)
+)
+
+create table Func_cargo(
+ matricula int,
+ cod_cargo int,
+ data_inicio date,
+ data_fim date
+)
+
+create table Dependente(
+ cod_dep int,
+ nome varchar(40),
+ data_nasc datetime
+)
+
+
+create table Func_dep(
+ matricula int,
+ cod_dep int
+)
+
+create table Cargo(
+ cod_cargo int,
+ descricao_cargo varchar(30)
+)
+
+
+exercicio 1
+ alter table Funcionario
+ add salario money
+
+
+exercicio 2
+
+ alter table Dependente
+ drop column data_nasc
+
+exercicio 3
+ alter table Funcionario
+ alter column rg varchar(50)
+
+exercicio 4
+ alter table Funcionario
+ add cidade_nasc varchar(10)
+
+exercicio 5
+ alter table Funcionario
+ drop column salario
+
+exercicio 6
+ alter table Dependente
+ add idade date
+
+ alter table Funcionario 
+ add nome_mae varchar(40)
+
+exercicio 7
+ alter table Funcionario
+ add DDD int
+
+exercicio 8
+ alter table Funcionario
+ drop column endereco
+
+ alter table Funcionario
+ add rua varchar(40), numero int, bairro varchar(20)   
+
+
+---------------------------------------
+ Primary key
+
+create database Vendas
+
+use Vendas
+
+create table Fornecedor (
+	cod_forn int primary key,
+ 	razaoSocial varchar(50),
+	cnpj varchar(14),
+	fone varchar(30)
+)
+
+create table Marca (
+	cod_marca int, 
+        nome_marca varchar(30)
+)
+
+-- para adicionar uma chave primaria, o campo deve ser obrigatório
+
+alter table Marca 
+ alter column cod_marca int not null
+
+
+alter table marca
+  add primary key(cod_marca)
+
+----------------------------
+exercicio 2 - Banco de dados escola
+
+create table Curso(
+	codCur int primary key,
+	nomeCurso varchar(50),
+	numero_vagas int,
+	codDep int
+)
+
+create teable Departamento(
+	codDep int primary key,
+	depto varchar(50),
+	codPes int
+)
+
+create teable bibiliografa(
+	codLivro int,
+	codDis int
+)
+
+create table Disciplina(
+	codDis int primary key,
+	nomeDisc varchar(50),
+	codCurso int
+)
+
+create table livro(
+	codLivro int primary key,
+	titulo varchar(50)
+)
+
+create teable Pessoa(
+	codPessoa int primary key,
+	nomePessoa varchar(50)
+)
+
+create teable Escreve(
+	codLivro int primary key,
+	titulo varchar(50)
+)
+
+-------------------------------------
+
+DME 
+
+Inserir registros nas tabelas criadas anteriormente:
+• 5 Pessoas
+• 5 Departamentos
+• 5 Livros
+• 5 Cursos
+• 5 Disciplinas
+
+
+insert into Pessoa(1, 'Joao')
+insert into Pessoa(2, 'Jose')
+insert into Pessoa(3, 'Maria')
+insert into Pessoa(4, 'Rogerio')
+
+insert into Pessoa(codPessoa, nomePessoa)
+values (5, 'Ana')
+
+insert into Departamento(11, 'Financeiro', 3)
+insert into Departamento(21, 'TI', 1)
+insert into Departamento(31, 'MK', 2)
+insert into Departamento(41, 'Administrativo', 4)
+
+insert into Departamento(codDep, depto, codPes)
+values (51, 'Vendas', 5)
+
+
+
+insert into Livros(2, 'Metamorfose')
+insert into Livros(4, 'Pearcy Jackson ladrão de raios')
+insert into Livros(3, 'historia para quem tem pressa')
+insert into Livros(5, 'Cronicas de Narnia')
+
+insert into Livros(codLivro)
+values (1)
+
+
+insert into Curso(12, 'matematica', 30, 11)
+insert into Curso(14, 'portugues', 20, 31)
+insert into Curso(13, 'historia', 20, 51)
+insert into Curso(codCur, numero_vagas)
+values (11, 30)
+
+insert into Curso(codCur, nomeCurso)
+values (11, 'informatica')
+
+insert into Disciplina(2, 'calculo', 12)
+insert into Disciplina(4, 'redacao', 14)
+insert into Disciplina(3, 'historia do brasil', 13)
+insert into Disciplina(5, 'Cronicas de Narnia', 11)
+
+insert into Disciplina(codDis, nomeDisc)
+values (1, 'pacote Office')
+
+
+
+
+update Departamento depto set = "Marketing" where codDep = 31
+
+
+update Pessoa nomePessoa set = "Ana" where codPessoa = 1
+update Pessoa nomePessoa set = "Eva" where codPessoa = 2
+update Pessoa nomePessoa set = "Ivo" where codPessoa = 3
+update Pessoa nomePessoa set = "Oto" where codPessoa = 4
+update Pessoa nomePessoa set = "Manoel" where codPessoa = 5
+
+
+
+insert into Pessoa(6, 'Joao flavio') 
+
+
+alter teable Pessoa
+add fone varchar(20)
+
+
+select * from Disciplina
+
+alter teable Disciplina
+add situacao char(2)
+
+update Pessoa fone set = "111111111" where codPessoa = 1
+update Pessoa fone set = "222222222" where codPessoa = 2
+update Pessoa fone set = "333333333" where codPessoa = 3
+update Pessoa fone set = "444444444" where codPessoa = 4
+update Pessoa fone set = "555555555" where codPessoa = 5
+
+
+update Disciplina situacao set = 'A'
+
+update Departamento depto set = 'EXATAS' where codDep = 51
+
+select nomePessoa from Pessoa
+
+
+update Disciplina situacao set = 'I' 
+	where codDisc = 1 OR 
+	where codDisc = 3 OR
+	where codDisc = 5
+
+
+select * from Livro
+
+select * from Departamento where codPes = 3
+
+
+---------------------------------------------
+
+criar numeração com a chave primaria
+
+create table Categoria
+	codCat int primary key identity(1,1) --primeiro parametro é o valor da onde eu quero começar, o segundo é de quanto em quanto
+	nomeCat varchar(20)
+
+insert into Categoria('INFORMATICA') -- vai criar a chave primaria automatica
+
+insert into Categoria(2, 'ELETRONICO') -- vai ocorrer um erro porque o banco que deve gerenciar
+
+insert into Categoria('ELETRONICO'),
+('GAMES'),
+('BELEZA'),
+('COSMETICOS')
+
+
+-- Chave estrangeira
+
+create table Produto (
+	codPro int Primary key indentity(1,1),
+	descricao varchar(40),
+	codBarras varchar(20),
+	estoque int,
+	codCat int foreign key references Categoria(codCat)
+) 
+
+-- adicionar chave estrangeira na tabela já existente 
+alter table Produto
+add codMarca int
+foreign key references Marca (codMarca)
+
+update Produto set codMara = 3 where codPro = 3
+
+
+-- chave primaria composta
+
+alter table bibliografia
+	add primary key(codLivro, codPessoa)
+
+
+
+-- calculos no BD
+-- max maior numero dos items,
+-- min menor numero dos items,
+-- sum total somado dos itens,
+-- avg media dos itens,
+-- count contagem dos itens
