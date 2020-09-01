@@ -1,0 +1,170 @@
+create table Banda(
+    codBanda int primary key identity(1,1),
+    nome varchar(120),
+    data varchar(15)
+    )
+    
+    create table Musico(
+    codMusico int primary key identity(1,1),
+    nome varchar(120),
+    dataNasc varchar(15),
+    nomeArtistico varchar(120),
+    estudio varchar(120)
+    )
+
+create table Cancao(
+    codCancao int primary key identity(1,1),
+    letra varchar(120),
+    dataComposicao varchar(15),
+    nome varchar(120)
+    ) 
+    
+create table Show(
+    codShow int primary key identity(1,1),
+    local varchar(120),
+    data int,
+    valor decimal,
+    banda int foreign key references Banda(codBanda)
+    )
+
+
+create table Disco(
+    codDisco int primary key identity(1,1),
+    titulo varchar(120),
+    ano int,
+    produtor varchar(120),
+    estudio varchar(120),
+    banda int foreign key references Banda(codBanda)
+    )
+   
+
+    
+create table DiscoCancao(
+    codDC int primary key identity(1,1),
+    cancao int foreign key references Cancao(codCancao),
+    disco int foreign key references Disco(codDisco)
+    )
+
+
+
+
+
+--- 3
+insert into Banda values
+    ('amazonas', '03-07-2005')
+
+insert into Disco values
+    ('Disco 1', 2009, 'produtor 1', 'estudio gonçalves', 1)
+
+insert into Musico values
+    ('jose', '10-10-1990','jose o musico','fulano'),
+    ('daniel', '10-10-1990','daniels','NM estudio'),
+    ('ana', '10-10-1990','ana linda','NM estudio'),
+    ('amanda', '10-06-1980','amandazinha','NM estudio'),
+    ('rogerio', '11-12-1991','rogerio o maluko','NM estudio')
+
+insert into Banda values
+    ('amazonas2', '03-07-2005'),
+    ('Ribeiro lagoa', '03-10-2002'),
+    ('ruina', '03-07-2010')
+
+
+-- 4
+
+    insert into Disco values
+    ('Disco 2', 2008, 'fulano', 'estudio gonçalves', 2),
+    ('Disco 3', 2010, 'produtor 3', 'estudio gonçalves', 3),
+    ('Disco 4', 2005, 'produtor 4', 'estudio gonçalves', 2),
+    ('Disco 5', 2002, 'produtor 5', 'estudio gonçalves', 3)
+
+
+--5
+
+    insert into Cancao values
+        ('A', '08-12-1991', 'nome 1'),
+        ('B', '08-12-1992', 'nome 2'),
+        ('C', '08-12-1993', 'nome 3'),
+        ('D', '08-12-1994', 'nome 4'),
+        ('E', '08-12-1995', 'nome 5'),
+        ('F', '08-12-1996', 'nome 6'),
+        ('G', '08-12-1997', 'nome 7'),
+        ('H', '08-12-1998', 'nome 8')
+
+
+
+-- 6
+create table MusicoCancao(
+    codMC int primary key identity(1,1),
+    cancao int foreign key references Cancao(codCancao),
+    musico int foreign key references Musico(codMusico)
+    )
+
+
+
+select * from Banda
+
+-- 7
+create table Papel(
+    codPapel int primary key identity(1,1),
+    papel varchar(120),
+    banda int foreign key references Banda(codBanda),
+    musico int foreign key references Musico(codMusico)
+    )
+    
+insert into Papel values
+('vocalista', 1, 1),
+('guitarrista', 1, 2),
+('baixista', 1, 3),
+('tecladista', 1, 4)
+
+select * from  Papel
+
+--9
+
+insert into Show values
+('franca', 2015,150, 1),
+('ribeirão preto', 2020, 250, 1),
+('são paulo', 2020,300, 1),
+('campinas', 2020,150, 1),
+('restinga', 2015,100, 1),
+('amazonas', 2015,200, 1)
+
+--10
+select (select AVG(valor) from Show) from Show where data = 2015
+
+--11
+select count(*) as cancoes_existentes from Disco where banda = 1
+
+--12
+
+select * from Disco inner join Banda on Banda.codBanda = Disco.codDisco where Disco.produtor = 'fulano'
+
+--13
+
+select * from Papel
+select nomeArtistico, Banda.nome, papel from Musico inner join Papel on Papel.musico = Musico.codMusico inner join Banda on Banda.codBanda = Papel.banda
+
+
+--14
+insert into DiscoCancao values
+(1,1),(2,1),(1,2)  
+
+
+select titulo, Cancao.nome from Disco inner join DiscoCancao on DiscoCancao.disco = Disco.codDisco 
+inner join Cancao on Cancao.codCancao = DiscoCancao.cancao where ano > 2000
+
+
+--15
+select * from Banda
+select titulo, Banda.nome from Banda left join Disco on Banda.codBanda = Disco.banda 
+
+
+--16
+
+
+select count(*) as quantidadeMusica
+from DiscoCancao inner join Cancao on Cancao.codCancao = DiscoCancao.cancao 
+inner join Disco on Disco.codDisco = DiscoCancao.disco
+where Disco.ano < 2015
+
+

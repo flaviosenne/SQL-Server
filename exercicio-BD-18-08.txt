@@ -1,0 +1,96 @@
+create table Categoria(
+    codCat int primary key identity(1, 1),
+    ativo varchar(15),
+    descricao varchar(40)
+    )
+    
+    create table Artista(
+    codArt int primary key identity(1, 1),
+    nome varchar(40),
+    nomeArtistico varchar(40),
+    dataNasc varchar(15),
+    pais varchar(40)
+    )
+
+create table CD(
+    codCD int primary key identity(1, 1),
+    ano int,
+    titulo varchar(40),
+    artista int foreign key references Artista (codArt),
+    categoria int foreign key references Categoria (codCat)
+    )      
+    
+    
+    insert into Categoria values('ativo', 'filmes')
+    insert into Categoria values('desativado', 'revista')
+    insert into Categoria values('ativo', 'jogos')
+    insert into Categoria values('ativo', 'musica')
+    
+    insert into Artista values('jose', 'jose luiz', '11/02/1980', 'nigeria')
+    insert into Artista values('ana', 'ana freitas', '10/03/1990', 'frança')
+    insert into Artista values('roberto', 'roberto da cruz', '11/09/1975', 'alemanha')
+    insert into Artista values('antonio', 'almirante', '20/05/1960', 'russia')
+    insert into Artista values('brasileiro', 'almirante', '20/05/1960', 'Brasil')
+    
+    insert into CD values(1967, 'CD1', 1, 1)
+    insert into CD values(2011, 'CD2', 1, 2)
+    insert into CD values(1990, 'CD3', 1, 3)
+    insert into CD values(2010, 'CD4', 2, 1)
+    insert into CD values(2002, 'CD5', 2, 2)
+    insert into CD values(2005, 'CD6', 3, 3)
+    insert into CD values(2005, 'CD7', 5, 2)
+    
+    alter table CD add preco decimal
+    
+    update CD set preco = 50.43
+    
+    update Artista set nome = 'roberto pinhais' where pais = 'alemanha'
+    
+    update CD set artista = 3 where categoria = 4
+    
+    select * from Artista
+    select * from Categoria
+    select * from CD
+    
+    select * from Categoria where ativo = 'ativo'
+    
+    
+    select * from CD inner join Categoria on CD.categoria = Categoria.codcat
+     where Categoria.ativo = 'ativo'
+    
+    
+    update CD set preco = preco*1.1 where ano >= 1950 And ano <= 2002
+    
+    -- valor dinamico
+    select * from CD where preco > (select AVG(preco) from CD)
+    
+    
+    delete CD where categoria in 
+        (select categoria from Categoria where ativo = 'desativado') 
+        and 
+        artista in
+        (select artista from Artista where pais = 'Brasil')
+      
+    
+    
+        
+    select count(*) as QuantidadeCDs 
+        from CD inner join Artista on CD.artista = Artista.codArt
+        where ano = 1990 and pais = 'alemanha'
+    
+    
+    
+ --Quando for fazer subselect, não pode colocar o *
+---Quando há a possibilidade do subselect retornar mais de um registro,
+precisamos trocar o sinal de '=' pelo operador 'IN'. Então teremos a resposta correta:
+
+delete cd where codCat IN (select codCat from categoria where ativo = 'S')	
+AND	
+codArt IN (select codArt from artista where pais = 'Brasil')
+    
+    
+    
+    
+    
+    
+    
