@@ -1,0 +1,13 @@
+--1
+
+create table TB_CLIENTE(
+    codigo int primary key identity(1,1) not null,
+    nome varchar(50) not null,
+    telefone varchar(50) not null,
+    tipo_cliente varchar(20) default 'Titular' not null,
+    dt_cadastro datetime default CURRENT_TIMESTAMP not null,
+    nr_dependentes int not null,
+        
+    )
+
+--2
