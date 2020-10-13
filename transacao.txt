@@ -111,22 +111,30 @@ select * from Venda
          insert into ProdutoVenda(produto, venda, quantidade)
          values(1, 1, 5)
          
-         update Produto
-         set estoque = 
-         (select estoque from Produto where cod = 
-          (select produto from ProdutoVenda 
-           inner join on ProdutoVenda.venda = ProdutoVenda
-          )
-         ) - 
-         (select quantidade from ProdutoVenda 
-          inner join Produto on Produto.cod = ProdutoVenda.produto
-          where (select ))
-         where (select venda from ProdutoVenda 
-                inner join on ProdutoVenda.venda = Venda.cod 
-                where = (select count() from ProdutoVenda)
-               )
+         insert into ProdutoVenda(produto, venda, quantidade)
+         values(1, 1, 2)
+         
+         insert into ProdutoVenda(produto, venda, quantidade)
+         values(1, 1, 1)  
                 
     
  select * from Produto
  select * from ProdutoVenda
  select * from Produto
+ 
+ Select * from Venda
+
+ 
+ select * from ProdutoVenda 
+ inner join Venda on ProdutoVenda.venda = Venda.cod
+ inner join Produto on ProdutoVenda.produto = Produto.cod
+ 
+ 
+update Produto
+set estoque = estoque - (select quantidade from ProdutoVenda) 
+ where cod = (select produto from ProdutoVenda)
+ 
+  select * from ProdutoVenda 
+ inner join Venda on ProdutoVenda.venda = Venda.cod
+ inner join Produto on ProdutoVenda.produto = Produto.cod
+ 
