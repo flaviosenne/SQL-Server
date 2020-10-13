@@ -37,6 +37,7 @@ create table Venda(
     cod int identity(1,1) constraint pk_sale primary key,
     data date constraint date_sale default(getdate()) not null,
     frete decimal not null,
+    valor decimal not null,
     cliente int not null,
     vendedor int not null,
     comissao decimal not null,
@@ -72,5 +73,50 @@ create table ProdutoVenda(
     )
 
 
+--6
+
+alter table Venda
+add situacao varchar(40) not null constraint situacao default('Não Registrado')
+
+select * from Venda
+
+insert into Cliente
+    values('Cliente 1', 123321-5312, 1)
     
+insert into Endereco
+    values('rua cliente 1', 1234, 'bairro do cliente 1', '64578-31', 1)
     
+insert into Vendedor
+    values('Vendedor 1', 128575-8252, 'Aprendiz')
+ insert into Venda(frete, valor, cliente, vendedor, comissao) values(13, 200, 1, 1, 10)
+
+-- transação
+ 
+ 
+select * from Venda
+begin transaction venda_transaction
+    begin try
+        
+        update Venda 
+         set situacao = 'Registrado' where cod = 1;
+         
+         insert into Financeiro
+         values('10-13-2020','12-20-2020','11-05-2020',2000, 1)
+         
+         insert into ProdutoVenda
+         values(1, 1, 5)
+         
+         update Produto
+         set estoque = 
+         (select estoque from Produto where cod = 1) - (select quantidade from ProdutoVenda where produto = 1)
+         where cod = 1
+         
+        commit transaction venda_transaction
+    end try
+    begin catch
+        select 
+            error_number() as NumeroErro,
+            error_line() as LinhaErro,
+            error_message() as MensagemErro
+         rollback transaction venda_transaction
+    end catch
