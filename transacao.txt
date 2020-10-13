@@ -1,0 +1,76 @@
+create table  Cliente (
+    cod int identity(1,1) constraint pk_client primary key,
+    nome varchar(40) not null,
+    fone int,
+    credito decimal constraint credit check(credito > 0)
+    )
+ 
+create table Endereco (
+    cod int identity(1,1) constraint pk_adress primary key,
+    rua varchar(40) not null,
+    numero int not null,
+    bairro varchar(40) not null,
+    cep varchar(9) not null,
+    cliente int,
+    
+    constraint fk_client foreign key(cliente) references Cliente(cod)
+    )
+    
+create table Vendedor (
+    cod int identity(1,1) constraint pk_salesman primary key,
+    nome varchar(40) not null,
+    fone int,
+    funcao varchar(10) constraint funcao check(funcao in ('Balcão', 'Externo','Aprendiz','Supervisor')) not null
+    )
+    
+create table Salario (
+    cod int identity(1,1) constraint pk_salary primary key,
+    data date,
+    comissao decimal not null,
+    valor decimal not null,
+    vendedor int not null,
+    constraint value_salary check((valor > 2000 and comissao < 1800) or (valor <= 2000)),
+    constraint fk_salesman foreign key(vendedor) references Vendedor(cod)
+    )
+    
+create table Venda(
+    cod int identity(1,1) constraint pk_sale primary key,
+    data date constraint date_sale default(getdate()) not null,
+    frete decimal not null,
+    cliente int not null,
+    vendedor int not null,
+    comissao decimal not null,
+    constraint fk_salesmanToSale foreign key(vendedor) references Vendedor(cod),
+    constraint fk_customer foreign key(cliente) references Cliente(cod)
+    )
+
+create table Produto(
+    cod int identity(1,1) constraint pk_product primary key,
+    nome varchar(40) not null,
+    unidade varchar(5) constraint qnt check(unidade in ('PÇ', 'grama', 'Kg', 'Metro', 'Litro')),
+    estoque int not null,
+    constraint stock check(estoque > 0 and unidade = 'PÇ')
+    
+    )
+    
+create table Financeiro(
+    cod int identity(1,1) constraint pk_financial primary key,
+    data_lancamento date,
+    data_vencimento date,
+    data_liquidacao date,
+    valor decimal constraint value_financial check(valor > 0),
+    venda int not null,
+    constraint fk_saleFinancial foreign key(venda) references Venda(cod)
+    )
+    
+create table ProdutoVenda(
+    cod int identity(1,1) constraint pk_product_sale primary key,
+    produto int not null,
+    venda int not null,
+    constraint fk_sale_ProdutoVenda foreign key(venda) references Venda(cod),
+    constraint fk_product_ProdutoVenda foreign key(produto) references Produto(cod)
+    )
+
+
+    
+    
