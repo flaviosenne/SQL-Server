@@ -65,7 +65,7 @@ create table Financeiro(
     )
     
 create table ProdutoVenda(
-    codProdutoVenda int identity(1,1) constraint pk_product_sale primary key,
+    cod int identity(1,1) constraint pk_product_sale primary key,
     produto int not null,
     venda int not null,
     quantidade int not null,
@@ -90,51 +90,81 @@ insert into Endereco
 insert into Vendedor
     values('Vendedor 1', 128575-8252, 'Aprendiz')
 
-insert into Venda(frete, valor, cliente, vendedor, comissao) values(13, 200, 1, 1, 10)
+insert into Venda(frete, valor, cliente, vendedor, comissao) 
+values(13, 200, 1, 1, 10),
+(20, 500, 1, 1, 12)
 
 
 insert into Produto 
 values('Produto 1', 'PÇ', 10),
-('Produto 1', 'PÇ', 500),
-('Produto 1', 'Kg', 1000)
+('Produto 2', 'PÇ', 500),
+('Produto 3', 'Kg', 1000)
 -- transação
  
- 
+
 select * from Venda
-        
+
+begin transaction vendaTran
+    begin try
+--6.a
         update Venda 
          set situacao = 'Registrado' where cod = 1;
          
          insert into Financeiro
          values('10-13-2020','12-20-2020','11-05-2020',2000, 1)
-         
+
+--6.b
          insert into ProdutoVenda(produto, venda, quantidade)
          values(1, 1, 5)
+         update Produto
+        set estoque = estoque - (select quantidade from ProdutoVenda 
+                         inner join Produto on Produto.cod = ProdutoVenda.produto where
+                         ProdutoVenda.cod = (select count(*) from ProdutoVenda))
+        where cod = (select produto from ProdutoVenda 
+       inner join Produto on ProdutoVenda.produto = Produto.cod where ProdutoVenda.cod = (select count(*) from ProdutoVenda))
+
          
          insert into ProdutoVenda(produto, venda, quantidade)
-         values(1, 1, 2)
+         values(2, 1, 2)
          
+         update Produto
+            set estoque = estoque - (select quantidade from ProdutoVenda 
+                         inner join Produto on Produto.cod = ProdutoVenda.produto where
+                         ProdutoVenda.cod = (select count(*) from ProdutoVenda))
+            where cod = (select produto from ProdutoVenda 
+           inner join Produto on ProdutoVenda.produto = Produto.cod where ProdutoVenda.cod = (select count(*) from ProdutoVenda))
+
          insert into ProdutoVenda(produto, venda, quantidade)
          values(1, 1, 1)  
                 
-    
- select * from Produto
- select * from ProdutoVenda
- select * from Produto
- 
- Select * from Venda
+
+            update Produto
+        set estoque = estoque - (select quantidade from ProdutoVenda 
+                         inner join Produto on Produto.cod = ProdutoVenda.produto where
+                         ProdutoVenda.cod = (select count(*) from ProdutoVenda))
+        where cod = (select produto from ProdutoVenda 
+       inner join Produto on ProdutoVenda.produto = Produto.cod where ProdutoVenda.cod = (select count(*) from ProdutoVenda))
+
+         
 
  
- select * from ProdutoVenda 
- inner join Venda on ProdutoVenda.venda = Venda.cod
- inner join Produto on ProdutoVenda.produto = Produto.cod
- 
- 
-update Produto
-set estoque = estoque - (select quantidade from ProdutoVenda) 
- where cod = (select produto from ProdutoVenda)
- 
-  select * from ProdutoVenda 
- inner join Venda on ProdutoVenda.venda = Venda.cod
- inner join Produto on ProdutoVenda.produto = Produto.cod
- 
+--6.c
+     
+        update Venda
+        set comissao = 0.1 * valor
+        where cod =(select count(*) from Venda)
+
+         select * from ProdutoVenda 
+         inner join Venda on ProdutoVenda.venda = Venda.cod
+         inner join Produto on ProdutoVenda.produto = Produto.cod 
+         
+         commit transaction vendaTran
+      end try
+      
+      begin catch
+          select 
+              error_number() as NumeroErro,
+              error_line() as LinhaComErro,
+              error_message() as MensagemErro
+          rollback transaction vendaTran
+       end catch
