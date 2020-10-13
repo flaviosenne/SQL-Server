@@ -50,7 +50,7 @@ create table Produto(
     nome varchar(40) not null,
     unidade varchar(5) constraint qnt check(unidade in ('PÇ', 'grama', 'Kg', 'Metro', 'Litro')),
     estoque int not null,
-    constraint stock check(estoque > 0 and unidade = 'PÇ')
+    constraint stock check(estoque > 0 and unidade = 'PÇ' or estoque > 0)
     
     )
     
@@ -65,9 +65,10 @@ create table Financeiro(
     )
     
 create table ProdutoVenda(
-    cod int identity(1,1) constraint pk_product_sale primary key,
+    codProdutoVenda int identity(1,1) constraint pk_product_sale primary key,
     produto int not null,
     venda int not null,
+    quantidade int not null,
     constraint fk_sale_ProdutoVenda foreign key(venda) references Venda(cod),
     constraint fk_product_ProdutoVenda foreign key(produto) references Produto(cod)
     )
@@ -88,14 +89,18 @@ insert into Endereco
     
 insert into Vendedor
     values('Vendedor 1', 128575-8252, 'Aprendiz')
- insert into Venda(frete, valor, cliente, vendedor, comissao) values(13, 200, 1, 1, 10)
 
+insert into Venda(frete, valor, cliente, vendedor, comissao) values(13, 200, 1, 1, 10)
+
+
+insert into Produto 
+values('Produto 1', 'PÇ', 10),
+('Produto 1', 'PÇ', 500),
+('Produto 1', 'Kg', 1000)
 -- transação
  
  
 select * from Venda
-begin transaction venda_transaction
-    begin try
         
         update Venda 
          set situacao = 'Registrado' where cod = 1;
@@ -103,20 +108,25 @@ begin transaction venda_transaction
          insert into Financeiro
          values('10-13-2020','12-20-2020','11-05-2020',2000, 1)
          
-         insert into ProdutoVenda
+         insert into ProdutoVenda(produto, venda, quantidade)
          values(1, 1, 5)
          
          update Produto
          set estoque = 
-         (select estoque from Produto where cod = 1) - (select quantidade from ProdutoVenda where produto = 1)
-         where cod = 1
-         
-        commit transaction venda_transaction
-    end try
-    begin catch
-        select 
-            error_number() as NumeroErro,
-            error_line() as LinhaErro,
-            error_message() as MensagemErro
-         rollback transaction venda_transaction
-    end catch
+         (select estoque from Produto where cod = 
+          (select produto from ProdutoVenda 
+           inner join on ProdutoVenda.venda = ProdutoVenda
+          )
+         ) - 
+         (select quantidade from ProdutoVenda 
+          inner join Produto on Produto.cod = ProdutoVenda.produto
+          where (select ))
+         where (select venda from ProdutoVenda 
+                inner join on ProdutoVenda.venda = Venda.cod 
+                where = (select count() from ProdutoVenda)
+               )
+                
+    
+ select * from Produto
+ select * from ProdutoVenda
+ select * from Produto
