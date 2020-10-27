@@ -67,9 +67,9 @@ insert into salario
 
 values
 
-(2050.49, '25/01/2014', 'Sem faltas no período', 1),
+(2050.49, '25/01/2014', 'Sem faltas no perÃ­odo', 1),
 
-(2534.00, '15/02/2014', 'Inclui bônus por equipe - atingimento de meta', 1),
+(2534.00, '15/02/2014', 'Inclui bÃ´nus por equipe - atingimento de meta', 1),
 
 (1998.40, '18/03/2014', NULL, 1)
 
