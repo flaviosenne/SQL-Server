@@ -80,7 +80,7 @@ end
 
 exec inserir_dados_contribuinte 'joao', 'joao@email', '1990-05-21'
 exec inserir_dados_tributos 'tributo 2'
-exec inserir_dados_pagamentos 2, 2, '2020-11-10', null, @valor = 223
+exec inserir_dados_pagamentos 1, 2, '2020-11-15', null, @valor = 93, @multa =20
 
 
 
@@ -137,7 +137,7 @@ begin
 	select * from Pagamento
 end
 
-exec efetuar_pagamento 1,'2020-10-29', 189
+exec efetuar_pagamento 9,'2020-10-29', 112, @multa=15
 
 --d
 create procedure total_pagamentos
@@ -177,9 +177,47 @@ as
 
 begin
 
-	select * from Pagamento
+	select count(*) from Pagamento
 	where CodTributo= @codigo and DtPagto = NULL
 end
 
 exec pagamentos_aberto 2
+
+-- e
+create procedure contribuinte_multa
+as
+
+begin
+	declare @cont int	
+	select C.CodContribuinte, C.Nome
+	from Pagamento P
+	inner join Contribuinte C
+	on P.CodContribuinte = C.CodContribuinte
+	where Multa > 0
+
+	select Nome from Contribuinte
+	declare @contribuinte int = 0
+	while @cont > @contribuinte
+	begin
+		declare @codigo int =0
+		
+		while @cont > @codigo
+		begin
+		
+			declare @contador int =
+			(select count(C.CodContribuinte) 
+			from Pagamento P
+			inner join Contribuinte C
+			on P.CodContribuinte = C.CodContribuinte
+			where Multa > 0
+			and 
+			C.CodContribuinte = @codigo+1) 
+		end
+		@contribuinte = @contribuinte+1
+
+	end
+
+
+end
+
 
