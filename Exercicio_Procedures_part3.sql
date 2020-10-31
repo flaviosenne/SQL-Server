@@ -183,7 +183,7 @@ end
 
 exec pagamentos_aberto 2
 
--- e
+-- g
 create procedure contribuinte_multa
 as
 
@@ -219,5 +219,8 @@ begin
 
 
 end
+
+
+
 
 
