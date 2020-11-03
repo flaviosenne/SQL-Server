@@ -162,11 +162,11 @@ begin
 	where
 	idDepto = @codigo
 	OR
-	depto = @departamento
+	depto like '%' + @departamento +'%'
 
 end
 
-exec selecionar_departamento @departamento = Venda
+exec selecionar_departamento @departamento = 'Ven'
 
 --d
 

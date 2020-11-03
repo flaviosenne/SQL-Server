@@ -28,6 +28,8 @@ CREATE TABLE Pagamento (
 )
 
 
+--1
+--a
 
 create procedure inserir_dados_contribuinte
 	@nome varchar(40) = null,
@@ -58,8 +60,6 @@ end
 
 
 
---1
---a
 create procedure inserir_dados_pagamentos
 	@contribuinte int = null,
 	@tributo int = null,
@@ -153,16 +153,18 @@ begin
 
 end
 
+select * from Pagamento
+
 exec total_pagamentos 2
 
 --e
-create procedure media_pagamentos_tributo
+alter procedure media_pagamentos_tributo
 	@codigo int
 as
 
 begin
 	select avg(Valor) from Pagamento
-	where CodTributo = @codigo
+	where CodTributo = @codigo and (ISNULL(DtPagto, '') <> '')
 
 end
 
@@ -178,48 +180,25 @@ as
 begin
 
 	select count(*) from Pagamento
-	where CodTributo= @codigo and DtPagto = NULL
+	where CodTributo= @codigo and isnull(DtPagto, '') = ''
 end
 
 exec pagamentos_aberto 2
 
 -- g
-create procedure contribuinte_multa
+alter procedure contribuinte_multa
 as
 
 begin
-	declare @cont int	
-	select C.CodContribuinte, C.Nome
-	from Pagamento P
-	inner join Contribuinte C
-	on P.CodContribuinte = C.CodContribuinte
-	where Multa > 0
-
-	select Nome from Contribuinte
-	declare @contribuinte int = 0
-	while @cont > @contribuinte
-	begin
-		declare @codigo int =0
-		
-		while @cont > @codigo
-		begin
-		
-			declare @contador int =
-			(select count(C.CodContribuinte) 
-			from Pagamento P
-			inner join Contribuinte C
-			on P.CodContribuinte = C.CodContribuinte
-			where Multa > 0
-			and 
-			C.CodContribuinte = @codigo+1) 
-		end
-		@contribuinte = @contribuinte+1
-
-	end
-
+	select top 1 sum(p.Multa) as totMulta, Nome
+	from Contribuinte c inner join Pagamento
+	p on c.CodContribuinte = p.CodContribuinte
+	group by Nome
+	order by sum(p.Multa) desc
 
 end
 
+exec contribuinte_multa
 
 
 

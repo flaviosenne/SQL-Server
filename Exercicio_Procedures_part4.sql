@@ -49,7 +49,8 @@ as
 begin
 	
 	insert into Aluno(codAluno, nome, codCurso)
-	values((select count(*) from Aluno)+1, @nome, @codCurso)
+	values((select top 1 codAluno from Aluno
+	order by codAluno desc)+1, @nome, @codCurso)
 
 	select * from Aluno
 end
@@ -112,6 +113,19 @@ select * from Curso
 select * from Nota
 select * from Aluno
 
+--d
+create procedure curso_qnt_aluno
+as
+begin
+	select c.curso, count(*) as quantidade_alunos from Curso as c
+	inner join Aluno as a
+	on a.codCurso = c.codCurso
+	group by c.curso
+
+end
+
+exec curso_qnt_aluno
+
 --e
 
 create procedure media_aluno
@@ -132,7 +146,7 @@ exec media_aluno 1
 
 select * from Nota
 --f 
-create procedure aluno_do_curso
+alter procedure aluno_do_curso
 	@codigo int
 as
 
@@ -142,7 +156,7 @@ begin
 	on N.codAluno = A.codAluno
 	inner join Disciplina as D
 	on D.codDisciplina = N.codDisciplina
-	right join Curso C
+	inner join Curso C
 	on C.codCurso = A.codCurso
 	where C.codCurso = @codigo
 end
