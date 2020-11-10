@@ -1,0 +1,44 @@
+
+create table produto(
+   cod int constraint pk_produto primary key identity(1,1),
+    descricao varchar(80),
+    estoque  int
+)
+
+ create table  itensMovimentacao(
+  cod int constraint pk_itens primary key identity(1,1),
+  produto int constraint fk_produto foreign key references  produto(cod),
+ qnt int,
+ valorUnit  money,
+ tipo char(1)
+ 
+) 
+Go
+Create trigger estoque_inserir
+  On itensMovimentacao
+
+  For insert
+as
+
+declare @tipo char Select tipo from inserted
+
+
+Update produto
+Set estoque =
+(
+select estoque from produto 
+Where cod =
+(select produto from inserted )
+)
++ 
+(Select qnt from inserted)
+
+
+Go
+Insert into produto values
+('produto 1', 5)
+
+Insert into itensMovimentacao
+Values(1, 2, 10, 'E')
+
+Select * from produto
