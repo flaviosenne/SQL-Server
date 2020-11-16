@@ -42,3 +42,48 @@ Insert into itensMovimentacao
 Values(1, 2, 10, 'E')
 
 Select * from produto
+
+
+--2
+create table Pessoas(
+    cod int constraint pk_pessoa primary key identity(1,1),
+    nome varchar(40)
+    )
+    
+    create table Departamento(
+    cod int constraint pk_dept primary key identity(1,1),
+    dept varchar(40),
+    responsavel int constraint fk_chefe foreign key  references Pessoas(cod)
+    )
+
+insert into Pessoas values
+('joao'),('jose'), ('ana')
+
+insert into Departamento values
+('info', 1), ('mkt', 3)
+
+go
+create trigger excluir
+    on Pessoas
+    
+    for INSTEAD OF
+    
+as
+
+declare @indice int select responsavel from deleted
+    update Departamento
+    set responsavel ='null'
+    where responsavel = @indice
+
+
+    delete Pessoas where cod = @indice
+go
+select * from Pessoas
+
+
+select * from Departamento
+
+delete Pessoas where cod = 1
+
+select * from Departamento
+
